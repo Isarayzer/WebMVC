@@ -25,7 +25,7 @@ namespace SalesWebMVC.Services
         //Metodo para inserir novos dados no banco de dados
         public void Insert(Seller obj)
         {
-            obj.Department = _context.Department.First();  //Se caso nao tem um departamento, inseri o primeiro sempre.
+            //obj.Department = _context.Department.First();  //Se caso nao tem um departamento, inseri o primeiro sempre.
             _context.Add(obj);
             _context.SaveChanges();
         }
