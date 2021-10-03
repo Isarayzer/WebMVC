@@ -41,5 +41,32 @@ namespace SalesWebMVC.Controllers
             _sellerService.Insert(seller);
             return RedirectToAction(nameof(Index)); //Redireciona a pagina para o index novamente.
         }
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var obj = _sellerService.FindById(id.Value);  //Busca os dados no banco de dados.
+
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            //Se os dados foram encontrados retorna os valores
+            return View(obj);
+        }
+
+        //Criando a ação deletar usando o POST
+        [HttpPost]  //Notação que o metodo é um POST
+        [ValidateAntiForgeryToken]  //Notação de seguranca quando recebe o token
+        public IActionResult Delete(int id)
+        {
+            _sellerService.Remove(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
