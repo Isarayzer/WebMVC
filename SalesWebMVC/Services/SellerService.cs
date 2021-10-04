@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SalesWebMVC.Models;
 using Microsoft.EntityFrameworkCore;
+using SalesWebMVC.Services.Exceptions;
 
 namespace SalesWebMVC.Services
 {
@@ -43,6 +44,27 @@ namespace SalesWebMVC.Services
             var obj = _context.Seller.Find(id);//Primeiro acha por id
             _context.Seller.Remove(obj); //depois remove o id encontrado.
             _context.SaveChanges(); //Confirma a alteracao
+        }
+
+        //Metodo para fazer o update dos dados no banco
+        public void Update(Seller obj)
+        {
+            //Verfica se o ID existe no banco
+            if (!_context.Seller.Any(x => x.Id == obj.Id))
+            {
+                throw new NotFoundException(obj.Id + "Not found");
+            }
+
+            try
+            {
+                _context.Update(obj);
+                _context.SaveChanges();//salva no banco.
+            }
+            catch (DbUpdateConcurrencyException e) //se caso der erro nos dados do banco quando for salvar.
+            {
+                throw new DbConcurrencyException(e.Message);
+            }
+
         }
     }
 }
