@@ -17,7 +17,7 @@ namespace SalesWebMVC.Services
             _context = context;
         }
 
-        //Metodo para retornar todos os departmententos
+        //Metodo para retornar todos os departamentos
         public async Task<List<Department>> FindAllAsync()
         {
             return await _context.Department.OrderBy(x => x.Name).ToListAsync(); //Funcao assincrona
