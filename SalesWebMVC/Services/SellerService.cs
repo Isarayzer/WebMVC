@@ -41,9 +41,16 @@ namespace SalesWebMVC.Services
         //Metodo para remover por ID
         public async Task RemoveAsync(int id)
         {
-            var obj = await _context.Seller.FindAsync(id);//Primeiro acha por id
-            _context.Seller.Remove(obj); //depois remove o id encontrado.
-           await _context.SaveChangesAsync(); //Confirma a alteracao
+            try
+            {
+                var obj = await _context.Seller.FindAsync(id);//Primeiro acha por id
+                _context.Seller.Remove(obj); //depois remove o id encontrado.
+                await _context.SaveChangesAsync(); //Confirma a alteracao
+            }
+            catch (DbUpdateException e)
+            {
+                throw new IntegrityException(e.Message);
+            }
         }
 
         //Metodo para fazer o update dos dados no banco
@@ -51,7 +58,7 @@ namespace SalesWebMVC.Services
         {
             //Verfica se o ID existe no banco
             bool hasAny = await _context.Seller.AnyAsync(x => x.Id == obj.Id);
-            
+
             if (!hasAny)
             {
                 throw new NotFoundException(obj.Id + "Not found");
